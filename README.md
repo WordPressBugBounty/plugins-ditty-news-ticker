@@ -1,0 +1,1 @@
+# plugins-ditty-news-ticker
