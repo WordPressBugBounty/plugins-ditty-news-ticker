@@ -1,4 +1,14 @@
 <?php
+add_filter( 'ditty_layout_tag_atts', 'ditty_modify_layout_tag_atts', 10, 4 );
+add_filter( 'ditty_layout_tag_author_avatar', 'ditty_init_layout_tag_author_avatar', 10, 4 );
+add_filter( 'ditty_layout_tag_author_banner', 'ditty_init_layout_tag_author_banner', 10, 4 );
+add_filter( 'ditty_layout_tag_categories', 'ditty_init_layout_tag_categories', 10, 4 );
+add_filter( 'ditty_layout_tag_excerpt', 'ditty_init_layout_tag_excerpt', 10, 4 );
+add_filter( 'ditty_layout_tag_image', 'ditty_init_layout_tag_image', 10, 4 );
+add_filter( 'ditty_layout_tag_image_url', 'ditty_init_layout_tag_image_url', 10, 4 );
+add_filter( 'ditty_layout_tag_media', 'ditty_init_layout_tag_media', 10, 4 );
+add_filter( 'ditty_layout_tag_terms', 'ditty_init_layout_tag_terms', 10, 4 );
+add_filter( 'ditty_layout_tag_time', 'ditty_init_layout_tag_time', 10, 4 );
 
 /**
  * Modify layout attributes
@@ -23,7 +33,6 @@ function ditty_modify_layout_tag_atts( $atts, $tag, $item_type, $data ) {
 	}
 	return $atts;	
 }
-add_filter( 'ditty_layout_tag_atts', 'ditty_modify_layout_tag_atts', 10, 4 );
 
 /**
  * Modify the layout author_avatar
@@ -62,7 +71,6 @@ function ditty_init_layout_tag_author_avatar( $author_avatar, $item_type, $data,
 	$author_avatar = '<img ' . ditty_attr_to_html( $author_avatar_args ) . ' />';
 	return $author_avatar;	
 }
-add_filter( 'ditty_layout_tag_author_avatar', 'ditty_init_layout_tag_author_avatar', 10, 4 );
 
 /**
  * Modify the layout author_banner
@@ -101,7 +109,6 @@ function ditty_init_layout_tag_author_banner( $author_banner, $item_type, $data,
 	$author_banner = '<img ' . ditty_attr_to_html( $author_banner_args ) . ' />';
 	return $author_banner;	
 }
-add_filter( 'ditty_layout_tag_author_banner', 'ditty_init_layout_tag_author_banner', 10, 4 );
 
 /**
  * Modify the layout categories
@@ -132,7 +139,6 @@ function ditty_init_layout_tag_categories( $categories, $item_type, $data, $atts
 	}
 	return $categories;
 }
-add_filter( 'ditty_layout_tag_categories', 'ditty_init_layout_tag_categories', 10, 4 );
 
 /**
  * Modify the layout excerpt
@@ -159,7 +165,6 @@ function ditty_init_layout_tag_excerpt( $excerpt, $item_type, $data, $atts ) {
 	$excerpt = '<span class="ditty-item__excerpt__content">' . wp_html_excerpt( $excerpt_data, $excerpt_length, $more ) . '</span>';
 	return $excerpt;
 }
-add_filter( 'ditty_layout_tag_excerpt', 'ditty_init_layout_tag_excerpt', 10, 4 );
 
 /**
  * Modify the layout content
@@ -188,52 +193,11 @@ add_filter( 'ditty_layout_tag_excerpt', 'ditty_init_layout_tag_excerpt', 10, 4 )
 */
 function ditty_init_layout_tag_image( $image, $item_type, $data, $atts ) {
   $image_data = ditty_layout_tag_image_data( $item_type, $data, $atts );
-	if ( ! $image_data || ( is_array( $image_data ) && ( ! $image_data['src'] ) ) ) {
-    $default_src = ( isset( $atts['default_src'] ) ) ? $atts['default_src'] : false;
-    if ( $default_src ) {
-      $image_data = is_array( $image_data) ? $image_data : [];
-      $image_data['src'] = $default_src;
-    } else {
-      return $image;
-    }
-	}
-
-	$defaults = array(
-		'width' 	=> '',
-		'height' 	=> '',
-		'fit' 		=> '',
-	);
-	$args = shortcode_atts( $defaults, $atts );
-	$style = '';
-	if ( '' !=  $args['width'] ) {
-		$style .= 'width:' . $args['width'] . ';';
-	}
-	if ( '' !=  $args['height'] ) {
-		$style .= 'height:' . $args['height'] . ';';
-	}
-	if ( '' !=  $args['fit'] ) {
-		$style .= 'object-fit:' . $args['fit'] . ';';
-	}
-	$image_defaults = array(
-		'src' 		=> '',
-		'width' 	=> '',
-		'height' 	=> '',
-		'alt' 		=> '',
-		'style'		=> ( '' != $style ) ? $style : false,
-	);
-	$image_args = shortcode_atts( $image_defaults, $image_data );
-	if ( '' == $image_args['width'] && '' == $image_args['height'] ) {
-		if ( $image_dimensions = ditty_get_image_dimensions( $image_args['src'] ) ) {
-      $image_args['width'] = $image_dimensions['width'];
-      $image_args['height'] = $image_dimensions['height'];
-    }
-	}
-  //$aspect_ratio = ( isset( $image_args['width'] ) && isset( $image_args['width'] ) ) ? " style='aspect-ratio:{$image_args['width']} / {$image_args['height']}'" : ''; 
-	//$image = '<div' . $aspect_ratio . '><img ' . ditty_attr_to_html( $image_args ) . ' /></div>';
-	$image = '<img ' . ditty_attr_to_html( $image_args ) . ' />';
-	return $image;	
+  if ( $tag_image = ditty_layout_tag_image( $image_data, $data, $atts ) ) {
+    return $tag_image;
+  }
+  return $image;
 }
-add_filter( 'ditty_layout_tag_image', 'ditty_init_layout_tag_image', 10, 4 );
 
 /**
  * Modify the layout image url
@@ -250,7 +214,29 @@ function ditty_init_layout_tag_image_url( $image_url, $item_type, $data, $atts )
 	}
 	return $image_url;	
 }
-add_filter( 'ditty_layout_tag_image_url', 'ditty_init_layout_tag_image_url', 10, 4 );
+
+/**
+ * Modify the layout media
+ *
+ * @since    3.1.47
+ * @var      html
+*/
+function ditty_init_layout_tag_media( $media, $item_type, $data, $atts ) {
+  $media_data = ditty_layout_tag_media_data( $item_type, $data, $atts );
+  if ( ! is_array( $media_data ) || empty( $media_data ) ) {
+    return false;
+  }
+  switch( $media_data['type'] ) {
+    case 'gallery':
+      return ditty_layout_tag_gallery( $media_data, $data, $atts );
+    case 'image':
+      return ditty_layout_tag_image( $media_data, $data, $atts );
+    case 'video':
+      return ditty_layout_tag_video( $media_data, $data, $atts );
+    default:
+      break;
+  }
+}
 
 /**
  * Modify the layout terms
@@ -281,7 +267,6 @@ function ditty_init_layout_tag_terms( $terms, $item_type, $data, $atts ) {
 	}
 	return $terms;
 }
-add_filter( 'ditty_layout_tag_terms', 'ditty_init_layout_tag_terms', 10, 4 );
 
 /**
  * Modify the layout date/time
@@ -301,4 +286,3 @@ function ditty_init_layout_tag_time( $time, $item_type, $data, $atts ) {
 	}
 	return $time;	
 }
-add_filter( 'ditty_layout_tag_time', 'ditty_init_layout_tag_time', 10, 4 );
