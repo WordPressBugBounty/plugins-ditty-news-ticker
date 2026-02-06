@@ -4,8 +4,8 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: responsive slider, content slider, post slider, news ticker, post ticker
 Requires at least: 6.2
 Requires PHP: 7.4
-Tested up to: 6.8.2
-Stable tag: 3.1.58
+Tested up to: 6.9
+Stable tag: 3.1.63
 License: GPL2
 
 Ditty offers a range of content display options, including its signature news ticker and customizable layouts.
@@ -111,6 +111,10 @@ The most common cause for an unresponsive Ditty (when using scroll or rotate mod
 
 [**View full help documentation.**](http://www.dittynewsticker.com/documentation/)
 
+= Where do I report security bugs found in this plugin? =
+
+Please report security bugs found in the source code of the Ditty plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/0a349553-0d5d-4119-959f-fb572c7d4133). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
+
 == Screenshots ==
 
 1. Ditty post settings
@@ -130,6 +134,23 @@ The most common cause for an unresponsive Ditty (when using scroll or rotate mod
 15. Advanced Settings
 
 == Changelog ==
+
+= 3.1.63 [2026-01-09] =
+* Install custom database tables on plugin activation
+
+= 3.1.62 [2026-01-05] =
+* Resolved CodeMirror bug
+
+= 3.1.61 [2025-12-29] =
+* Bug fix for Divi 5 support
+* PHP 8.4 updates
+
+= 3.1.60 [2025-08-22] =
+* Added automatic visibility detection for ticker displays - tickers now automatically pause when placed in hidden areas (like accordion sections) and resume when the containing element becomes visible, while respecting manual pause state
+* File structure updates
+
+= 3.1.59 [2025-08-22] =
+* Security updates
 
 = 3.1.58 [2025-08-14] =
 * Security updates
@@ -1082,4 +1103,4 @@ The most common cause for an unresponsive Ditty (when using scroll or rotate mod
 
 == Upgrade Notice ==
 
-Security and editor updates
+Install custom database tables on plugin activation
